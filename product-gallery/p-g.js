@@ -43,7 +43,7 @@ document.querySelectorAll(".add-btn").forEach(btn => {
       alert(product.name + " is already in cart!");
     } else {
       // Save with $price string for consistency
-      cart.push({ ...product, price: `$${product.price}` });
+      cart.push({ ...product });
       localStorage.setItem("cart", JSON.stringify(cart));
       alert(product.name + " added to cart!");
       updateCartCount();
