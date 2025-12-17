@@ -1,5 +1,5 @@
 const products = [
-  { id: 1, name: "Coffee Mug", price: 10, image: "./images-folder/bag.jpeg" },
+  { id: 1, name: "Coffee Mug", price: 10, image: "./images-folder/Boulder-Mugs.jpeg" },
   { id: 2, name: "Headphones", price: 50, image: "./images-folder/download.jpeg" },
   { id: 3, name: "Backpack", price: 30, image: "./images-folder/bag.jpeg" },
 ];
@@ -18,15 +18,16 @@ products.forEach(item => {
     <div class="price">$${item.price}</div>
     <button class="add-btn" data-id="${item.id}">Add to Cart</button>
   `;
-
+  
   productList.appendChild(card);
 });
 
 // Update cart count in navbar
 function updateCartCount() {
-  let countEl = document.getElementById("cart-count");
+  let countEl = document.getElementById("cart-count"); 
   if (countEl) {
-    countEl.innerText = cart.length;
+    let totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    countEl.innerText = totalItems;
   }
 }
 updateCartCount();
