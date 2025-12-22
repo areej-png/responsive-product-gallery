@@ -1,8 +1,13 @@
+const products = [
+  { id: 1, name: "Coffee Mug", price: 10, stock: 5, image: "./images-folder/Boulder-Mugs.jpeg" },
+  { id: 2, name: "Headphones", price: 50, stock: 3, image: "./images-folder/download.jpeg" },
+  { id: 3, name: "Backpack", price: 30, stock: 0, image: "./images-folder/bag.jpeg" }
+];
+
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 let discountApplied = false;
 let discountPercent = 0;
 
-// Valid discount codes
 const discountCodes = {
   "SAVE20": 20,
   "FIRST10": 10,
@@ -21,7 +26,11 @@ let shippingCostEl = document.getElementById("shipping-cost");
 let cartTotalEl = document.getElementById("cart-total");
 let cartCountEl = document.getElementById("cart-count");
 
-// Render Cart
+function getProductStock(productId) {
+  const product = products.find(p => p.id === productId);
+  return product ? product.stock : 0;
+}
+
 function renderCart() {
   if (cart.length === 0) {
     cartItemsContainer.style.display = "none";
@@ -37,6 +46,9 @@ function renderCart() {
   cartItemsContainer.innerHTML = "";
 
   cart.forEach((item, index) => {
+    const maxStock = getProductStock(item.id);
+    const isMaxQty = item.quantity >= maxStock;
+    
     let div = document.createElement("div");
     div.classList.add("cart-item");
     
@@ -49,7 +61,7 @@ function renderCart() {
       <div class="quantity-controls">
         <button onclick="decreaseQuantity(${index})">-</button>
         <span>${item.quantity || 1}</span>
-        <button onclick="increaseQuantity(${index})">+</button>
+        <button onclick="increaseQuantity(${index})" ${isMaxQty ? 'disabled class="disabled-btn"' : ''}>+</button>
       </div>
       <div class="item-total">
         $${(item.price * (item.quantity || 1)).toFixed(2)}
@@ -65,14 +77,20 @@ function renderCart() {
   updateTotals();
 }
 
-// Increase Quantity
 function increaseQuantity(index) {
+  const item = cart[index];
+  const maxStock = getProductStock(item.id);
+  
+  if (item.quantity >= maxStock) {
+    alert("Sorry! Maximum available quantity reached.");
+    return;
+  }
+  
   cart[index].quantity = (cart[index].quantity || 1) + 1;
   saveCart();
   renderCart();
 }
 
-// Decrease Quantity
 function decreaseQuantity(index) {
   if (cart[index].quantity > 1) {
     cart[index].quantity--;
@@ -81,7 +99,6 @@ function decreaseQuantity(index) {
   }
 }
 
-// Remove from Cart
 function removeFromCart(index) {
   if (confirm("Remove this item from cart?")) {
     cart.splice(index, 1);
@@ -90,13 +107,11 @@ function removeFromCart(index) {
   }
 }
 
-// Save Cart to LocalStorage
 function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
   updateCartCount();
 }
 
-// Update Cart Count
 function updateCartCount() {
   if (cartCountEl) {
     let totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -104,7 +119,6 @@ function updateCartCount() {
   }
 }
 
-// Update Totals
 function updateTotals() {
   let subtotal = cart.reduce((sum, item) => {
     return sum + (item.price * (item.quantity || 1));
@@ -119,7 +133,6 @@ function updateTotals() {
   shippingCostEl.innerText = shipping === 0 ? "FREE" : "$" + shipping.toFixed(2);
   cartTotalEl.innerHTML = "<strong>$" + total.toFixed(2) + "</strong>";
 
-  // Update free shipping message
   let remaining = FREE_SHIPPING_THRESHOLD - subtotal;
   let remainingAmountEl = document.getElementById("remaining-amount");
   let freeShippingMsg = document.getElementById("free-shipping-msg");
@@ -132,7 +145,6 @@ function updateTotals() {
   }
 }
 
-// Apply Discount Code
 document.getElementById("apply-discount").addEventListener("click", () => {
   let code = document.getElementById("discount-input").value.toUpperCase().trim();
   let message = document.getElementById("discount-message");
@@ -153,7 +165,6 @@ document.getElementById("apply-discount").addEventListener("click", () => {
   }, 3000);
 });
 
-// Checkout Button
 document.querySelector(".checkout-btn").addEventListener("click", () => {
   if (cart.length === 0) {
     alert("Your cart is empty!");
@@ -162,6 +173,5 @@ document.querySelector(".checkout-btn").addEventListener("click", () => {
   alert("Proceeding to checkout... (Feature coming soon!)");
 });
 
-// Initialize
 renderCart();
 updateCartCount();
