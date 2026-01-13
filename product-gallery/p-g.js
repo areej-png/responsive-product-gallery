@@ -1,9 +1,65 @@
 const products = [
   { id: 1, name: "Coffee Mug", price: 10, stock: 5, image: "./images-folder/Boulder-Mugs.jpeg" },
   { id: 2, name: "Headphones", price: 50, stock: 9, image: "./images-folder/download.jpeg" },
-  { id: 3, name: "Backpack", price: 30, stock: 10, image: "./images-folder/bag.jpeg" } 
+  { id: 3, name: "Backpack", price: 30, stock: 10, image: "./images-folder/bag.jpeg" }
 ];
 
+// Hamburger Menu Functionality
+const menuToggle = document.querySelector('.menu-toggle');
+const navLinks = document.querySelector('.nav-links');
+const body = document.body;
+
+if (menuToggle && navLinks) {
+  // Create overlay
+  let overlay = document.querySelector('.menu-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.className = 'menu-overlay';
+    body.appendChild(overlay);
+  }
+
+  // Close menu function
+  function closeMenu() {
+    menuToggle.classList.remove('active');
+    navLinks.classList.remove('active');
+    overlay.classList.remove('active');
+    body.style.overflow = '';
+  }
+
+  // Open menu function
+  function openMenu() {
+    menuToggle.classList.add('active');
+    navLinks.classList.add('active');
+    overlay.classList.add('active');
+    body.style.overflow = 'hidden';
+  }
+
+  // Toggle with hamburger button
+  menuToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (navLinks.classList.contains('active')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  // Close when clicking overlay
+  overlay.addEventListener('click', closeMenu);
+  // Close menu when clicking nav links
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+      closeMenu();
+    }
+  });
+}
+
+// Product List & Cart
 let productList = document.getElementById("product-list");
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -27,11 +83,11 @@ function getRemainingStock(productId) {
 products.forEach(({ id, name, price, image, stock }) => {
   const card = document.createElement("div");
   card.classList.add("card");
-  
+
   const remaining = getRemainingStock(id);
   const isOutOfStock = stock === 0 || remaining === 0;
-  const showUrgency = remaining > 0 && remaining <= 3; // Show urgency when 3 or less items left
-  
+  const showUrgency = remaining > 0 && remaining <= 3;
+
   card.innerHTML = `
     <img src="${image}" alt="${name}"/>
     <h3>${name}</h3>
@@ -43,7 +99,7 @@ products.forEach(({ id, name, price, image, stock }) => {
       ${isOutOfStock ? 'Sold Out' : 'Add to Cart'}
     </button>
   `;
-  
+
   productList.appendChild(card);
 });
 
@@ -60,11 +116,11 @@ function updateButtonState(productId) {
   const button = document.querySelector(`button[data-id="${productId}"]`);
   const card = button.closest('.card');
   const remaining = getRemainingStock(productId);
-  
+
   // Remove old urgency message if exists
   const oldWarning = card.querySelector('.stock-warning');
   if (oldWarning) oldWarning.remove();
-  
+
   if (remaining === 0) {
     button.innerText = "Sold Out";
     button.disabled = true;
@@ -86,7 +142,7 @@ productList.addEventListener("click", (e) => {
 
   const id = parseInt(e.target.dataset.id);
   const product = products.find(p => p.id === id);
-  
+
   // Check stock availability
   if (!canAddToCart(id)) {
     alert("Sorry! This item is currently out of stock.");
