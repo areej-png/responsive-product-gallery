@@ -4,6 +4,64 @@ const products = [
   { id: 3, name: "Backpack", price: 30, stock: 0, image: "./images-folder/bag.jpeg" }
 ];
 
+// Hamburger Menu Toggle - WORKING VERSION FOR CART PAGE
+const menuToggle = document.querySelector('.menu-toggle');
+const navLinks = document.querySelector('.nav-links');
+const body = document.body;
+
+if (menuToggle && navLinks) {
+  // Create overlay
+  let overlay = document.querySelector('.menu-overlay');
+
+if (!overlay) {
+  overlay = document.createElement('div');
+  overlay.className = 'menu-overlay';
+  body.appendChild(overlay);
+}
+
+  // Close menu function
+  function closeMenu() {
+    menuToggle.classList.remove('active');
+    navLinks.classList.remove('active');
+    overlay.classList.remove('active');
+    body.style.overflow = '';
+  }
+
+  // Open menu function
+  function openMenu() {
+    menuToggle.classList.add('active');
+    navLinks.classList.add('active');
+    overlay.classList.add('active');
+    body.style.overflow = 'hidden';
+  }
+
+  // Toggle with hamburger button
+  menuToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (navLinks.classList.contains('active')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  // Close when clicking overlay
+  overlay.addEventListener('click', closeMenu);
+
+  document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', closeMenu);
+});
+
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+      closeMenu();
+    }
+  });
+}
+
+// Cart functionality
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 let discountApplied = false;
 let discountPercent = 0;
@@ -26,6 +84,7 @@ let shippingCostEl = document.getElementById("shipping-cost");
 let cartTotalEl = document.getElementById("cart-total");
 let cartCountEl = document.getElementById("cart-count");
 
+// Get product stock from products array
 function getProductStock(productId) {
   const product = products.find(p => p.id === productId);
   return product ? product.stock : 0;
