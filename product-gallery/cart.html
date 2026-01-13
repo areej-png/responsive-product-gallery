@@ -14,7 +14,15 @@
     <header>
         <!--Main Navbar-->
         <div class="main-navbar">
-            <h2 class="logo">Product-Gallery</h2>
+
+            <button class="menu-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <!-- Logo (Center on Mobile) -->
+            <div class="logo">Product-Gallery</div>
+
             <nav class="nav-links">
                 <ul>
                     <li><a href="index.html">Home</a></li>
@@ -37,8 +45,9 @@
     <main>
         <div class="container">
             <h2>Shopping Cart</h2>
-            <p id="free-shipping-msg">Shop for $<span id="remaining-amount">0</span> more to enjoy <strong>Free Shipping</strong></p>
-            
+            <p id="free-shipping-msg">Shop for $<span id="remaining-amount">0</span> more to enjoy <strong>Free
+                    Shipping</strong></p>
+
             <section class="cart-layout">
                 <!-- Cart Items Section -->
                 <div class="cart-items-section">
@@ -53,24 +62,24 @@
                 <!-- Cart Summary Panel -->
                 <div id="cart-panel">
                     <h3>Order Summary</h3>
-                    
+
                     <div class="summary-row">
                         <span>Subtotal:</span>
                         <span id="subtotal">$0</span>
                     </div>
-                    
+
                     <div class="summary-row">
                         <span>Discount:</span>
                         <span id="discount-amount" style="color: #28a745;">$0</span>
                     </div>
-                    
+
                     <div class="summary-row">
                         <span>Shipping:</span>
                         <span id="shipping-cost">$5</span>
                     </div>
-                    
+
                     <hr>
-                    
+
                     <div class="summary-row total">
                         <span><strong>Total:</strong></span>
                         <span id="cart-total"><strong>$0</strong></span>
