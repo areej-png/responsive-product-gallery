@@ -99,11 +99,9 @@ responsive-product-gallery/
 ## 🚀 How to Run Locally
 
 1. **clone the repository**
-  ```bash
-  https://github.com/areej-png/responsive-product-gallery.git
-2. Navigation into the folder:
-   ```bash 
-   cd responsive-product-gallery/product-gallery 
+  `https://github.com/areej-png/responsive-product-gallery.git`
+2. Navigation into the folder: 
+   `cd responsive-product-gallery/product-gallery`
 3. Open `index.html` in any your browser
 4. Explore all features by adding products to the cart
 
